@@ -119,6 +119,14 @@
             background-color: #d32f2f;
         }
         
+        .btn-toggle {
+            background-color: #607D8B;
+        }
+        
+        .btn-toggle:hover {
+            background-color: #455A64;
+        }
+        
         .btn i {
             margin-right: 8px;
         }
@@ -280,6 +288,7 @@
             z-index: 1000;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             border: 1px solid #00ff00;
+            display: none; /* Hidden by default */
         }
         
         .debug-log h3 {
@@ -292,6 +301,13 @@
         
         .debug-log p {
             margin: 5px 0;
+        }
+        
+        .toggle-log-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1001;
         }
         
         @media (max-width: 600px) {
@@ -311,8 +327,13 @@
                 width: 90%;
                 left: 5%;
                 right: 5%;
-                bottom: 10px;
+                bottom: 60px;
                 height: 30%;
+            }
+            
+            .toggle-log-btn {
+                bottom: 20px;
+                right: 20px;
             }
         }
     </style>
@@ -357,6 +378,9 @@
             <button id="clear-btn" class="btn btn-danger">
                 Clear All
             </button>
+            <button id="toggle-log-btn" class="btn btn-toggle toggle-log-btn">
+                Show Process Log
+            </button>
         </div>
         
         <div class="loading" id="loading">
@@ -377,7 +401,7 @@
         </div>
     </div>
 
-    <!-- Debug log container -->
+    <!-- Debug log container (hidden by default) -->
     <div class="debug-log" id="debug-log">
         <h3>Process Log</h3>
         <div id="log-content"></div>
@@ -390,6 +414,7 @@
         const convertBtn = document.getElementById('convert-btn');
         const printBtn = document.getElementById('print-btn');
         const clearBtn = document.getElementById('clear-btn');
+        const toggleLogBtn = document.getElementById('toggle-log-btn');
         const loadingEl = document.getElementById('loading');
         const errorEl = document.getElementById('error');
         const successEl = document.getElementById('success');
@@ -398,6 +423,9 @@
         const previewImage = document.getElementById('preview');
         const debugLog = document.getElementById('debug-log');
         const logContent = document.getElementById('log-content');
+        
+        // Debug log visibility state
+        let isLogVisible = false;
         
         // Debug log function
         function log(message) {
@@ -408,11 +436,19 @@
             logContent.scrollTop = logContent.scrollHeight; // Auto-scroll to bottom
         }
         
+        // Toggle debug log visibility
+        function toggleLogVisibility() {
+            isLogVisible = !isLogVisible;
+            debugLog.style.display = isLogVisible ? 'block' : 'none';
+            toggleLogBtn.textContent = isLogVisible ? 'Hide Process Log' : 'Show Process Log';
+        }
+        
         // Event Listeners
         convertBtn.addEventListener('click', convertReceipt);
         printBtn.addEventListener('click', printList);
         clearBtn.addEventListener('click', clearAll);
         receiptImageInput.addEventListener('change', handleImagePreview);
+        toggleLogBtn.addEventListener('click', toggleLogVisibility);
         
         // Handle image preview
         function handleImagePreview(e) {
