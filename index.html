@@ -13,7 +13,7 @@
             --dark: #333;
             --gray: #e0e0e0;
             --danger: #f44336;
-            --success: #4CAF50;
+            --success: green;
         }
         
         * {
@@ -303,13 +303,6 @@
             margin: 5px 0;
         }
         
-        .toggle-log-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1001;
-        }
-        
         @media (max-width: 600px) {
             .container {
                 padding: 15px;
@@ -329,11 +322,6 @@
                 right: 5%;
                 bottom: 60px;
                 height: 30%;
-            }
-            
-            .toggle-log-btn {
-                bottom: 20px;
-                right: 20px;
             }
         }
     </style>
@@ -378,7 +366,7 @@
             <button id="clear-btn" class="btn btn-danger">
                 Clear All
             </button>
-            <button id="toggle-log-btn" class="btn btn-toggle toggle-log-btn">
+            <button id="toggle-log-btn" class="btn btn-toggle">
                 Show Process Log
             </button>
         </div>
