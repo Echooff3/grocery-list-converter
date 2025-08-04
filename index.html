@@ -327,15 +327,6 @@
     </style>
 </head>
 <body>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-EJ4CPDVYB8"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-EJ4CPDVYB8');
-</script>
     <div class="container">
         <header>
             <h1>Receipt to Shopping List Converter</h1>
@@ -499,13 +490,49 @@
                 log('Image converted to base64 successfully');
                 
                 log('Preparing API request to OpenRouter');
-                // Prepare the payload
+                // Prepare the payload with updated system prompt
                 const payload = {
                     model: "google/gemini-2.0-flash-lite-001",
                     messages: [
                         {
                             role: "system",
-                            content: "You are a helpful assistant that converts grocery receipts into organized shopping lists. Group items by category (Bakery, Dairy, Meat, Coffee & Tea, etc.). Put other items in an 'Other' category at the end. Format the response as JSON with categories as keys and arrays of items as values. Each item should only have a name."
+                            content: `
+You are an intelligent assistant that converts grocery receipts into organized shopping lists. 
+You have two main tasks:
+
+1. Categorization: Group items by sensible grocery categories such as:
+   - Produce (Fruits, Vegetables)
+   - Dairy (Milk, Cheese, Yogurt)
+   - Meat & Seafood
+   - Bakery (Bread, Pastries)
+   - Beverages (Coffee, Tea, Juice, Soda)
+   - Snacks & Chips
+   - Frozen Foods
+   - Canned Goods
+   - Condiments & Sauces
+   - Breakfast Items (Cereal, Oatmeal)
+   - Household Items
+   - Health & Beauty
+   - Other (for items that don't fit other categories)
+
+2. Item Normalization: 
+   - If you can identify what an item is, provide a clean, commonly-used name for that product.
+   - ONLY if you cannot reasonably guess what the item is from the receipt text, use its name as it appeared on the receipt.
+   - Remove prices, SKU numbers, or store-specific information.
+   - Standardize item names (e.g., "BANANAS" becomes "Bananas", "ORGANIC BANANAS" can become "Bananas").
+   - Group items with the same normalized name.
+   - Put any clearly impulse or non-grocery items (candy bars, magazines, etc.) in an "Impulse Buys" category.
+
+Format the response as clean JSON with categories as keys and arrays of item names as values.
+Example output:
+{
+  "Produce": ["Bananas", "Apples", "Lettuce"],
+  "Dairy": ["Milk", "Cheese", "Yogurt"],
+  "Impulse Buys": ["Candy Bar", "Magazine"]
+}
+
+BE SURE to return valid JSON that will be parsed by JSON.parse().
+`
                         },
                         {
                             role: "user",
@@ -518,7 +545,7 @@
                                 },
                                 {
                                     type: "text",
-                                    text: "Convert this receipt image into a shopping list. Extract all items without prices. Group items with the same name."
+                                    text: "Convert this receipt image into a shopping list. Extract all items without prices. Use your best judgment to normalize item names when possible."
                                 }
                             ]
                         }
