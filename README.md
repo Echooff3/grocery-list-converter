@@ -2,6 +2,10 @@
 
 A web application that converts grocery receipt images into organized, printable shopping lists using AI-powered item recognition and categorization.
 
+## Demo
+
+**[Try it live here!](https://echooff3.github.io/grocery-list-converter/)**
+
 ## Features
 
 - **Image Upload**: Upload photos of your grocery receipts
